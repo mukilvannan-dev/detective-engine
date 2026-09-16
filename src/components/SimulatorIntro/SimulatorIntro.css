@@ -1,0 +1,90 @@
+.intro {
+  background: #f1eee6;
+  padding: 96px 32px;
+}
+
+.intro__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 64px;
+  align-items: start;
+}
+
+.intro__eyebrow {
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #c6293f;
+  display: block;
+  margin-bottom: 14px;
+}
+
+.intro__heading {
+  font-family: "Fraunces", serif;
+  font-weight: 600;
+  font-size: 36px;
+  line-height: 1.2;
+  color: #0b0b10;
+  max-width: 15ch;
+  margin: 0 0 20px;
+}
+
+.intro__lede {
+  font-family: "Inter", sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  color: #45454f;
+  max-width: 46ch;
+}
+
+.intro__board {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-top: 1px solid rgba(11, 11, 16, 0.12);
+}
+
+.intro__card {
+  padding: 28px 0;
+  border-bottom: 1px solid rgba(11, 11, 16, 0.12);
+}
+
+.intro__tag {
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #c99a46;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.intro__card-title {
+  font-family: "Fraunces", serif;
+  font-weight: 600;
+  font-size: 20px;
+  color: #0b0b10;
+  margin: 0 0 8px;
+}
+
+.intro__card-body {
+  font-family: "Inter", sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #55555f;
+  margin: 0;
+  max-width: 42ch;
+}
+
+@media (max-width: 860px) {
+  .intro__inner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .intro__heading {
+    font-size: 30px;
+    max-width: none;
+  }
+}

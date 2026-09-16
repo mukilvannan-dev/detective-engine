@@ -1,0 +1,114 @@
+.how {
+  background: #0b0b10;
+  padding: 96px 32px;
+}
+
+.how__inner {
+  max-width: 840px;
+  margin: 0 auto;
+}
+
+.how__header {
+  text-align: center;
+  margin-bottom: 72px;
+}
+
+.how__eyebrow {
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #c99a46;
+  display: block;
+  margin-bottom: 14px;
+}
+
+.how__heading {
+  font-family: "Fraunces", serif;
+  font-weight: 600;
+  font-size: 38px;
+  color: #f1eee6;
+  margin: 0;
+}
+
+.how__timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+.how__timeline::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 27px;
+  width: 1px;
+  background: rgba(241, 238, 230, 0.14);
+}
+
+.how__step {
+  position: relative;
+  display: flex;
+  gap: 28px;
+  padding-bottom: 52px;
+}
+
+.how__step:last-child {
+  padding-bottom: 0;
+}
+
+.how__marker {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #0b0b10;
+  border: 1px solid rgba(198, 41, 63, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.how__number {
+  font-family: "Fraunces", serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: #c6293f;
+}
+
+.how__content {
+  padding-top: 10px;
+}
+
+.how__step-title {
+  font-family: "Fraunces", serif;
+  font-weight: 600;
+  font-size: 21px;
+  color: #f1eee6;
+  margin: 0 0 8px;
+}
+
+.how__step-body {
+  font-family: "Inter", sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  color: #b9b9c2;
+  margin: 0;
+  max-width: 52ch;
+}
+
+@media (max-width: 560px) {
+  .how__timeline::before {
+    left: 23px;
+  }
+  .how__marker {
+    width: 48px;
+    height: 48px;
+  }
+  .how__step {
+    gap: 20px;
+  }
+}

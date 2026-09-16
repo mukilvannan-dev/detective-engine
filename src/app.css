@@ -1,0 +1,515 @@
+/* ==========================================
+   GLOBAL APP
+========================================== */
+
+.app {
+  min-height: 100vh;
+  background: #f7f5f2;
+  color: #17171b;
+}
+
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.header {
+  height: 78px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 6%;
+
+  background: rgba(247, 245, 242, 0.96);
+
+  border-bottom: 1px solid #dedbd6;
+
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+
+/* Logo */
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  letter-spacing: 2px;
+}
+
+.logo-icon {
+  font-size: 24px;
+  color: #b51f3b;
+}
+
+
+/* Navigation */
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 38px;
+}
+
+.nav a {
+  text-decoration: none;
+
+  color: #4d4b51;
+
+  font-size: 14px;
+
+  transition: 0.2s;
+}
+
+.nav a:hover {
+  color: #b51f3b;
+}
+
+
+/* Start button */
+
+.start-button {
+  border: none;
+
+  background: #b51f3b;
+  color: white;
+
+  padding: 12px 21px;
+
+  border-radius: 2px;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  letter-spacing: 0.8px;
+
+  cursor: pointer;
+
+  transition: 0.25s;
+}
+
+.start-button:hover {
+  background: #8f1730;
+  transform: translateY(-1px);
+}
+
+
+/* ==========================================
+   HERO
+========================================== */
+
+.hero {
+  min-height: calc(100vh - 78px);
+
+  display: grid;
+
+  grid-template-columns: 1fr 0.9fr;
+
+  gap: 70px;
+
+  align-items: center;
+
+  padding: 80px 8%;
+
+  position: relative;
+
+  overflow: hidden;
+}
+
+
+/* subtle background */
+
+.hero::before {
+  content: "";
+
+  position: absolute;
+
+  width: 500px;
+  height: 500px;
+
+  background: #eadfe1;
+
+  border-radius: 50%;
+
+  filter: blur(100px);
+
+  opacity: 0.35;
+
+  top: -180px;
+  right: -100px;
+
+  pointer-events: none;
+}
+
+
+/* Hero content */
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+
+/* Eyebrow */
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  font-size: 10px;
+
+  letter-spacing: 2px;
+
+  color: #9a233c;
+
+  font-weight: 700;
+
+  margin-bottom: 25px;
+}
+
+.eyebrow-line {
+  width: 28px;
+  height: 1px;
+
+  background: #9a233c;
+}
+
+
+/* Main heading */
+
+.hero h1 {
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: clamp(55px, 7vw, 100px);
+
+  line-height: 0.92;
+
+  font-weight: 500;
+
+  letter-spacing: -4px;
+
+  margin: 0;
+}
+
+.hero h1 span {
+  color: #b51f3b;
+  font-style: italic;
+}
+
+
+/* Description */
+
+.hero-description {
+  max-width: 570px;
+
+  margin-top: 32px;
+
+  color: #65626a;
+
+  font-size: 16px;
+
+  line-height: 1.8;
+}
+
+
+/* Hero buttons */
+
+.hero-buttons {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+
+  margin-top: 38px;
+}
+
+
+/* Primary button */
+
+.primary-button {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+
+  border: none;
+
+  background: #17171b;
+  color: white;
+
+  padding: 16px 22px;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.25s;
+}
+
+.primary-button span {
+  color: #e85a70;
+  font-size: 18px;
+}
+
+.primary-button:hover {
+  background: #b51f3b;
+}
+
+
+/* Secondary */
+
+.secondary-button {
+  color: #444249;
+
+  text-decoration: none;
+
+  font-size: 13px;
+
+  border-bottom: 1px solid #aaa6a1;
+
+  padding-bottom: 4px;
+}
+
+
+/* ==========================================
+   HERO IMAGE
+========================================== */
+
+.hero-visual {
+  position: relative;
+
+  min-height: 530px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* Image placeholder */
+
+.case-image-placeholder {
+  width: 100%;
+  height: 530px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #202025,
+      #101014
+    );
+
+  position: relative;
+
+  overflow: hidden;
+
+  box-shadow: 25px 25px 0 #e5d8da;
+}
+
+
+/* Placeholder content */
+
+.placeholder-content {
+  position: absolute;
+
+  inset: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 10px;
+
+  color: #77757b;
+
+  letter-spacing: 3px;
+
+  font-size: 13px;
+}
+
+.placeholder-icon {
+  font-size: 35px;
+
+  color: #b51f3b;
+
+  margin-bottom: 10px;
+}
+
+.placeholder-content small {
+  color: #55545a;
+
+  font-size: 10px;
+
+  letter-spacing: 1px;
+}
+
+
+/* Classified stamp */
+
+.case-stamp {
+  position: absolute;
+
+  bottom: 40px;
+  left: -25px;
+
+  padding: 8px 18px;
+
+  border: 2px solid #b51f3b;
+
+  color: #b51f3b;
+
+  font-size: 12px;
+
+  letter-spacing: 3px;
+
+  transform: rotate(-8deg);
+
+  background: #f7f5f2;
+}
+
+
+/* ==========================================
+   INTRO
+========================================== */
+
+.intro {
+  padding: 130px 8%;
+
+  background: #17171b;
+
+  color: white;
+
+  text-align: center;
+}
+
+.section-label {
+  color: #e15a70;
+
+  font-size: 10px;
+
+  letter-spacing: 3px;
+
+  font-weight: 700;
+
+  margin-bottom: 25px;
+}
+
+.intro h2 {
+  font-family: Georgia, "Times New Roman", serif;
+
+  font-size: clamp(40px, 5vw, 70px);
+
+  line-height: 1.05;
+
+  font-weight: 400;
+
+  margin: 0;
+}
+
+.intro h2 span {
+  color: #e15a70;
+  font-style: italic;
+}
+
+
+/* ==========================================
+   TEMPORARY SECTION
+========================================== */
+
+.placeholder-section {
+  min-height: 400px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #f7f5f2;
+
+  color: #9a233c;
+
+  font-size: 12px;
+
+  letter-spacing: 4px;
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 900px) {
+
+  .nav {
+    gap: 18px;
+  }
+
+  .header {
+    padding: 0 4%;
+  }
+
+  .hero {
+    grid-template-columns: 1fr;
+
+    padding: 70px 6%;
+  }
+
+  .hero-visual {
+    min-height: 400px;
+  }
+
+  .case-image-placeholder {
+    height: 400px;
+  }
+
+}
+
+
+@media (max-width: 650px) {
+
+  .header {
+    height: 70px;
+  }
+
+  .nav {
+    display: none;
+  }
+
+  .start-button {
+    padding: 10px 14px;
+  }
+
+  .hero {
+    padding: 60px 6%;
+  }
+
+  .hero h1 {
+    font-size: 58px;
+    letter-spacing: -2px;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-visual {
+    min-height: 330px;
+  }
+
+  .case-image-placeholder {
+    height: 330px;
+  }
+
+}
