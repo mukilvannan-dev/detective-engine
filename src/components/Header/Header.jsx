@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import "./Header.css";
 
 export default function Header() {
@@ -7,26 +8,29 @@ export default function Header() {
   return (
     <header className="header">
       <div className="header__inner">
-        <a href="/" className="header__logo">
+        <Link to="/" className="header__logo">
           <span className="header__logo-mark">⌕</span>
           <span className="header__logo-text">
             CaseMind<span className="header__logo-accent">Ai</span>
           </span>
-        </a>
+        </Link>
 
         <nav className={`header__nav ${menuOpen ? "is-open" : ""}`}>
-          <a href="#home" className="header__link" onClick={() => setMenuOpen(false)}>
+          <Link to="/" className="header__link" onClick={() => setMenuOpen(false)}>
             Home
+          </Link>
+          <a href="/#about" className="header__link" onClick={() => setMenuOpen(false)}>
+            The Engine
           </a>
-          <a href="#how-we-play" className="header__link" onClick={() => setMenuOpen(false)}>
+          <a href="/#how-we-play" className="header__link" onClick={() => setMenuOpen(false)}>
             How We Play
           </a>
+          <Link to="/cases" className="header__link" onClick={() => setMenuOpen(false)}>
+            Cases
+          </Link>
         </nav>
 
         <div className="header__actions">
-          <a href="#start" className="header__cta">
-            Start a Case
-          </a>
           <button
             className={`header__toggle ${menuOpen ? "is-open" : ""}`}
             aria-label="Toggle menu"

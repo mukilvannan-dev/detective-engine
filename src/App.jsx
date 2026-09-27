@@ -1,16 +1,16 @@
-import Header from "./components/Header/Header";
-import Hero from "./components/Hero/Hero";
-import SimulatorIntro from "./components/SimulatorIntro/SimulatorIntro";
-import HowWePlay from "./components/HowWePlay/HowWePlay";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { LandingPage, CasesPage, CaseInvestigationPage } from "./pages";
 
 function App() {
   return (
-    <>
-      <Header />
-      <Hero />
-      <SimulatorIntro />
-      <HowWePlay />
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/cases" element={<CasesPage />} />
+        <Route path="/case/:id" element={<CaseInvestigationPage />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

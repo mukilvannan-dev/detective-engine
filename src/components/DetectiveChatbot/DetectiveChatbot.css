@@ -1,0 +1,421 @@
+/* Floating Draggable Detective Window */
+.detective-chat {
+  position: fixed;
+  z-index: 1000;
+  width: 390px;
+  max-width: calc(100vw - 24px);
+  background: rgba(18, 18, 25, 0.94);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(201, 154, 70, 0.35);
+  border-radius: 8px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65), 0 0 1px rgba(241, 238, 230, 0.15);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  user-select: none;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.detective-chat.is-dragging {
+  box-shadow: 0 32px 80px rgba(0, 0, 0, 0.8), 0 0 15px rgba(201, 154, 70, 0.4);
+  border-color: #c99a46;
+  opacity: 0.96;
+}
+
+.detective-chat.is-minimized {
+  width: 320px;
+}
+
+/* Header */
+.detective-chat__header {
+  padding: 12px 16px;
+  background: #14141e;
+  border-bottom: 1px solid rgba(241, 238, 230, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: grab;
+}
+
+.detective-chat.is-dragging .detective-chat__header {
+  cursor: grabbing;
+}
+
+.detective-chat__title-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.detective-drag-handle {
+  color: #636270;
+  font-size: 16px;
+  letter-spacing: -2px;
+}
+
+.detective-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #3bb273;
+  box-shadow: 0 0 6px #3bb273;
+  transition: all 0.3s ease;
+}
+
+.detective-status-dot[data-mood="thinking"] {
+  background: #e8a838;
+  box-shadow: 0 0 8px #e8a838;
+  animation: pulseDot 1s infinite alternate;
+}
+
+.detective-status-dot[data-mood="objection"] {
+  background: #c6293f;
+  box-shadow: 0 0 10px #c6293f;
+  animation: flashDot 0.4s infinite alternate;
+}
+
+@keyframes pulseDot {
+  from { opacity: 0.4; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1.2); }
+}
+
+@keyframes flashDot {
+  from { opacity: 0.3; }
+  to { opacity: 1; }
+}
+
+.detective-name {
+  font-family: "Fraunces", serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: #f1eee6;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.detective-sub {
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  color: #c99a46;
+  display: block;
+}
+
+.detective-chat__controls {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.detective-ctrl-btn {
+  background: #1e1d2b;
+  border: 1px solid rgba(241, 238, 230, 0.1);
+  color: #b9b9c2;
+  width: 26px;
+  height: 26px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.detective-ctrl-btn:hover {
+  background: #2a293c;
+  color: #f1eee6;
+}
+
+.detective-ctrl-btn.is-active {
+  color: #c99a46;
+  border-color: rgba(201, 154, 70, 0.4);
+}
+
+/* Avatar Stage */
+.detective-avatar-stage {
+  padding: 14px 16px;
+  background: #0e0e14;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  border-bottom: 1px solid rgba(241, 238, 230, 0.06);
+}
+
+.detective-portrait {
+  width: 74px;
+  height: 74px;
+  flex-shrink: 0;
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+.detective-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.7));
+}
+
+.pipe-glow {
+  animation: emberGlow 2s infinite ease-in-out;
+}
+
+@keyframes emberGlow {
+  0%, 100% { opacity: 0.6; r: 1.5; }
+  50% { opacity: 1; r: 2.2; filter: drop-shadow(0 0 3px #ff5a2b); }
+}
+
+.smoke-puff {
+  animation: smokeRise 2.5s infinite ease-out;
+}
+
+@keyframes smokeRise {
+  0% { transform: translate(0, 0) scale(0.6); opacity: 0.6; }
+  50% { opacity: 0.4; }
+  100% { transform: translate(4px, -12px) scale(1.6); opacity: 0; }
+}
+
+/* Mood reactions */
+.detective-portrait.mood--speaking {
+  animation: subtleSpeak 0.3s infinite alternate ease-in-out;
+}
+
+@keyframes subtleSpeak {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-2px); }
+}
+
+.detective-portrait.mood--objection {
+  animation: objectionShake 0.4s ease;
+}
+
+@keyframes objectionShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px) rotate(-2deg); }
+  75% { transform: translateX(3px) rotate(2deg); }
+}
+
+.detective-speech-bubble {
+  background: #191823;
+  border: 1px solid rgba(201, 154, 70, 0.25);
+  border-radius: 6px;
+  padding: 10px 14px;
+  flex: 1;
+  min-height: 64px;
+}
+
+.detective-mood-tag {
+  font-family: "Inter", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #c99a46;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.detective-speech-text {
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #f1eee6;
+  margin: 0;
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  color: #c6293f;
+  font-weight: 700;
+  animation: blink 0.7s infinite;
+  margin-left: 2px;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+/* Chips */
+.detective-chips {
+  padding: 8px 12px;
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  background: #111118;
+  border-bottom: 1px solid rgba(241, 238, 230, 0.06);
+}
+
+.detective-chip {
+  background: #1c1b26;
+  border: 1px solid rgba(241, 238, 230, 0.1);
+  color: #b9b9c2;
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  padding: 5px 10px;
+  border-radius: 12px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.detective-chip:hover:not(:disabled) {
+  background: #c6293f;
+  color: #f1eee6;
+  border-color: #c6293f;
+}
+
+.detective-chip:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Chat Body */
+.detective-chat__body {
+  height: 200px;
+  overflow-y: auto;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(241, 238, 230, 0.2) transparent;
+}
+
+.chat-msg {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 88%;
+}
+
+.chat-msg--user {
+  align-self: flex-end;
+}
+
+.chat-msg--detective {
+  align-self: flex-start;
+}
+
+.chat-msg__sender {
+  font-family: "Inter", sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.chat-msg--user .chat-msg__sender {
+  color: #c99a46;
+  text-align: right;
+}
+
+.chat-msg--detective .chat-msg__sender {
+  color: #c6293f;
+}
+
+.chat-msg__text {
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  line-height: 1.5;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.chat-msg--user .chat-msg__text {
+  background: #252433;
+  color: #f1eee6;
+  border: 1px solid rgba(241, 238, 230, 0.1);
+  border-bottom-right-radius: 1px;
+}
+
+.chat-msg--detective .chat-msg__text {
+  background: #14131d;
+  color: #e5e2db;
+  border: 1px solid rgba(198, 41, 63, 0.25);
+  border-bottom-left-radius: 1px;
+}
+
+/* Input Bar */
+.detective-chat__footer {
+  padding: 10px 14px;
+  background: #14141e;
+  border-top: 1px solid rgba(241, 238, 230, 0.08);
+  display: flex;
+  gap: 8px;
+}
+
+.detective-input {
+  flex: 1;
+  background: #0d0d12;
+  border: 1px solid rgba(241, 238, 230, 0.12);
+  color: #f1eee6;
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.detective-input:focus {
+  border-color: #c99a46;
+}
+
+.detective-send-btn {
+  background: #c6293f;
+  border: none;
+  color: #f1eee6;
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.detective-send-btn:hover:not(:disabled) {
+  background: #df304a;
+}
+
+.detective-send-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Launcher Floating Button when closed */
+.detective-launcher-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  background: #14141e;
+  border: 1px solid #c99a46;
+  border-radius: 30px;
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.detective-launcher-btn:hover {
+  background: #1d1c2c;
+  transform: translateY(-2px);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.7), 0 0 15px rgba(201, 154, 70, 0.3);
+}
+
+.detective-launcher-badge {
+  font-size: 18px;
+}
+
+.detective-launcher-label {
+  font-family: "Fraunces", serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #f1eee6;
+}

@@ -1,0 +1,607 @@
+import { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
+import { cases } from "../data/cases";
+import DetectiveChatbot from "../components/DetectiveChatbot/DetectiveChatbot";
+import "./CaseInvestigationPage.css";
+
+export default function CaseInvestigationPage() {
+  const { id } = useParams();
+  const caseData = cases.find((c) => c.id === id) || cases[0];
+
+  const [activeTab, setActiveTab] = useState("overview");
+  const [selectedSuspect, setSelectedSuspect] = useState(caseData.suspects[0]);
+  const [selectedEvidence, setSelectedEvidence] = useState(caseData.evidence[0]);
+  const [showAccusationModal, setShowAccusationModal] = useState(false);
+  const [accusedId, setAccusedId] = useState("");
+  const [deductionNotes, setDeductionNotes] = useState("");
+  const [verdictResult, setVerdictResult] = useState(null);
+  const [secondsElapsed, setSecondsElapsed] = useState(0);
+
+  // Clue Vault & Memory Reference state
+  const [pinnedKeywords, setPinnedKeywords] = useState({});
+  const [customClueInput, setCustomClueInput] = useState("");
+
+  const handleToggleKeyword = (suspectId, keyword) => {
+    setPinnedKeywords((prev) => {
+      const currentList = prev[suspectId] || [];
+      const exists = currentList.some((k) => k.toLowerCase() === keyword.toLowerCase());
+      if (exists) {
+        return {
+          ...prev,
+          [suspectId]: currentList.filter((k) => k.toLowerCase() !== keyword.toLowerCase()),
+        };
+      } else {
+        return {
+          ...prev,
+          [suspectId]: [...currentList, keyword],
+        };
+      }
+    });
+  };
+
+  const handleAddCustomClue = (e) => {
+    e.preventDefault();
+    if (!customClueInput.trim() || !selectedSuspect) return;
+    handleToggleKeyword(selectedSuspect.id, customClueInput.trim());
+    setCustomClueInput("");
+  };
+
+  // Parses text and marks suspect keywords in red with interactive click-to-pin
+  const renderClueText = (text, suspect) => {
+    if (!text || !suspect?.keywords?.length) return text;
+
+    const escapedKeywords = suspect.keywords
+      .map((k) => k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+      .sort((a, b) => b.length - a.length);
+
+    const regex = new RegExp(`(${escapedKeywords.join("|")})`, "gi");
+    const parts = text.split(regex);
+    const suspectPinned = pinnedKeywords[suspect.id] || [];
+
+    return parts.map((part, index) => {
+      const isKeyword = suspect.keywords.some(
+        (k) => k.toLowerCase() === part.toLowerCase()
+      );
+
+      if (isKeyword) {
+        const isPinned = suspectPinned.some((p) => p.toLowerCase() === part.toLowerCase());
+        return (
+          <button
+            key={index}
+            type="button"
+            className={`clue-keyword-btn ${isPinned ? "is-pinned" : ""}`}
+            onClick={() => handleToggleKeyword(suspect.id, part)}
+            title={isPinned ? `Pinned to Vault: Click to unpin "${part}"` : `Click to pin "${part}" to Clue Vault`}
+          >
+            {part}
+            <span className="clue-tag-icon">{isPinned ? "✓" : "+"}</span>
+          </button>
+        );
+      }
+      return part;
+    });
+  };
+
+  // Investigation timer
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setSecondsElapsed((s) => s + 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Reset selections when case changes
+  useEffect(() => {
+    if (caseData?.suspects?.length) {
+      setSelectedSuspect(caseData.suspects[0]);
+    }
+    if (caseData?.evidence?.length) {
+      setSelectedEvidence(caseData.evidence[0]);
+    }
+    setActiveTab("overview");
+    setVerdictResult(null);
+    setAccusedId("");
+    setDeductionNotes("");
+  }, [id]);
+
+  const formatTimer = (totalSecs) => {
+    const mins = Math.floor(totalSecs / 60);
+    const secs = totalSecs % 60;
+    return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+  };
+
+  const handleAccusationSubmit = (e) => {
+    e.preventDefault();
+    if (!accusedId) return;
+
+    const isCorrect = accusedId === caseData.killerId;
+    setVerdictResult({
+      success: isCorrect,
+      killerName: caseData.suspects.find((s) => s.id === caseData.killerId)?.name,
+      explanation: caseData.solutionExplanation,
+    });
+  };
+
+  return (
+    <div className="investigation-page">
+      {/* Top Command Bar */}
+      <header className="investigation-bar">
+        <div className="investigation-bar__inner">
+          <div className="investigation-bar__left">
+            <Link to="/cases" className="investigation-back">
+              ← Return to Case Archives
+            </Link>
+            <div className="investigation-title-box">
+              <span className="investigation-badge">{caseData.fileNumber}</span>
+              <h1 className="investigation-case-title">{caseData.title}</h1>
+            </div>
+          </div>
+
+          <div className="investigation-bar__right">
+            <div className="investigation-timer">
+              <span className="investigation-timer__icon">⏱</span>
+              <span>Investigation Clock: <strong>{formatTimer(secondsElapsed)}</strong></span>
+            </div>
+            <button
+              className="investigation-accuse-btn"
+              onClick={() => setShowAccusationModal(true)}
+            >
+              Deliver Accusation ⚖️
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Workbench */}
+      <main className="workbench-container">
+        {/* Navigation Tabs */}
+        <nav className="workbench-tabs">
+          <button
+            className={`workbench-tab ${activeTab === "overview" ? "is-active" : ""}`}
+            onClick={() => setActiveTab("overview")}
+          >
+            📋 Case Overview & Victim
+          </button>
+          <button
+            className={`workbench-tab ${activeTab === "suspects" ? "is-active" : ""}`}
+            onClick={() => setActiveTab("suspects")}
+          >
+            👥 Suspects & Alibis ({caseData.suspects.length})
+          </button>
+          <button
+            className={`workbench-tab ${activeTab === "evidence" ? "is-active" : ""}`}
+            onClick={() => setActiveTab("evidence")}
+          >
+            🔬 Forensic Evidence ({caseData.evidence.length})
+          </button>
+          <button
+            className={`workbench-tab ${activeTab === "timeline" ? "is-active" : ""}`}
+            onClick={() => setActiveTab("timeline")}
+          >
+            ⏱ Chronology & Timeline
+          </button>
+        </nav>
+
+        {/* Tab 1: Case Overview */}
+        {activeTab === "overview" && (
+          <section className="workbench-panel">
+            {/* Crime Scene Photo */}
+            {caseData.crimeSceneImage && (
+              <div className="crime-scene-card">
+                <div className="crime-scene-frame">
+                  <img
+                    src={caseData.crimeSceneImage}
+                    alt={`Crime Scene - ${caseData.title}`}
+                    className="crime-scene-img"
+                    onError={(e) => {
+                      e.target.style.display = "none";
+                      if (e.target.nextSibling) e.target.nextSibling.style.display = "flex";
+                    }}
+                  />
+                  <div className="crime-scene-fallback" style={{ display: "none" }}>
+                    <span>🏛️ CRIME SCENE REPOSITORY</span>
+                  </div>
+                  <div className="crime-scene-overlay">
+                    <span className="crime-scene-badge">CRIME SCENE EVIDENCE PHOTOGRAPH</span>
+                    <span className="crime-scene-loc">LOCATION: {caseData.victim.foundAt}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="victim-card">
+              <div className="victim-card__header">
+                <div className="victim-identity-cluster">
+                  <div className="victim-photo-frame">
+                    <img
+                      src={caseData.victim.image}
+                      alt={caseData.victim.name}
+                      className="victim-photo-img"
+                      onError={(e) => {
+                        e.target.style.display = "none";
+                        if (e.target.nextSibling) e.target.nextSibling.style.display = "flex";
+                      }}
+                    />
+                    <div className="victim-photo-fallback" style={{ display: "none" }}>
+                      <span>👤</span>
+                    </div>
+                    <span className="victim-deceased-tag">DECEASED</span>
+                  </div>
+                  <div className="victim-info-box">
+                    <span className="victim-label">DECEASED VICTIM</span>
+                    <h2 className="victim-name">{caseData.victim.name}</h2>
+                    <p className="victim-occ">{caseData.victim.occupation}, Age {caseData.victim.age}</p>
+                  </div>
+                </div>
+                <div className="victim-stamp">CASE FILE CLOSED 5 YRS — REOPENED</div>
+              </div>
+
+              <div className="victim-facts-grid">
+                <div className="victim-fact">
+                  <span className="victim-fact__label">Cause of Death</span>
+                  <p className="victim-fact__val">{caseData.victim.causeOfDeath}</p>
+                </div>
+                <div className="victim-fact">
+                  <span className="victim-fact__label">Estimated Time of Death</span>
+                  <p className="victim-fact__val">{caseData.victim.timeOfDeath}</p>
+                </div>
+                <div className="victim-fact">
+                  <span className="victim-fact__label">Location Found</span>
+                  <p className="victim-fact__val">{caseData.victim.foundAt}</p>
+                </div>
+              </div>
+
+              <div className="case-brief-prose">
+                <h3>Incident Summary</h3>
+                <p>{caseData.synopsis}</p>
+                <div className="dossier-alert">
+                  <strong>Detective Note:</strong> Use your draggable AI Detective Partner on screen to cross-examine suspect statements against forensic records.
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Tab 2: Suspects */}
+        {activeTab === "suspects" && (
+          <section className="workbench-panel suspect-split">
+            <div className="suspect-roster">
+              <h3 className="panel-subheading">Persons of Interest</h3>
+              <div className="suspect-items-list">
+                {caseData.suspects.map((suspect) => (
+                  <button
+                    key={suspect.id}
+                    className={`suspect-item-btn ${selectedSuspect?.id === suspect.id ? "is-selected" : ""}`}
+                    onClick={() => setSelectedSuspect(suspect)}
+                  >
+                    <div className="suspect-item-avatar-wrap">
+                      <img
+                        src={suspect.image}
+                        alt={suspect.name}
+                        className="suspect-item-thumb"
+                        onError={(e) => {
+                          e.target.style.display = "none";
+                          if (e.target.nextSibling) e.target.nextSibling.style.display = "flex";
+                        }}
+                      />
+                      <div className="suspect-item-avatar-fallback" style={{ display: "none" }}>
+                        👤
+                      </div>
+                    </div>
+                    <div className="suspect-item-info">
+                      <span className="suspect-item-name">{suspect.name}</span>
+                      <span className="suspect-item-role">{suspect.role}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {selectedSuspect && (
+              <div className="suspect-detail-view">
+                <div className="suspect-profile-hero">
+                  <div className="suspect-mugshot-container">
+                    <div className="suspect-mugshot-photo-frame">
+                      <img
+                        src={selectedSuspect.image}
+                        alt={selectedSuspect.name}
+                        className="suspect-mugshot-img"
+                        onError={(e) => {
+                          e.target.style.display = "none";
+                          if (e.target.nextSibling) e.target.nextSibling.style.display = "flex";
+                        }}
+                      />
+                      <div className="suspect-mugshot-fallback" style={{ display: "none" }}>
+                        <span className="fallback-silhouette">👤</span>
+                        <span className="fallback-note">POLICE MUGSHOT ARCHIVE</span>
+                      </div>
+                      <div className="mugshot-scale" aria-hidden="true">
+                        <span>6'2"</span>
+                        <span>5'10"</span>
+                        <span>5'6"</span>
+                        <span>5'2"</span>
+                      </div>
+                    </div>
+                    <div className="suspect-mugshot-placard">
+                      <span className="placard-line">METRO POLICE // CID #{selectedSuspect.id.toUpperCase()}</span>
+                      <span className="placard-sub">STATUS: FORMAL INTERROGATION</span>
+                    </div>
+                  </div>
+
+                  <div className="suspect-profile-details">
+                    <span className="suspect-role-badge">{selectedSuspect.role}</span>
+                    <h2 className="suspect-detail-name">{selectedSuspect.name}</h2>
+                    <p className="suspect-lead-summary">
+                      Official interrogation file open. Notice the <span className="highlight-lead-hint">red keywords</span> in their statement below — click any keyword to store it in your Clue Vault!
+                    </p>
+                  </div>
+                </div>
+
+                <div className="suspect-block">
+                  <h4 className="suspect-block__title">Reported Alibi</h4>
+                  <p className="suspect-block__content">
+                    {renderClueText(selectedSuspect.alibi, selectedSuspect)}
+                  </p>
+                </div>
+
+                <div className="suspect-block">
+                  <h4 className="suspect-block__title">Suspect Statement to Police</h4>
+                  <blockquote className="suspect-quote">
+                    “{renderClueText(selectedSuspect.statement, selectedSuspect)}”
+                  </blockquote>
+                </div>
+
+                <div className="suspect-block">
+                  <h4 className="suspect-block__title">Apparent Motive</h4>
+                  <p className="suspect-block__content">
+                    {renderClueText(selectedSuspect.motive, selectedSuspect)}
+                  </p>
+                </div>
+
+                <div className="suspect-contradiction-box">
+                  <span className="contradiction-tag">⚠️ Forensic Anomaly</span>
+                  <p>{renderClueText(selectedSuspect.contradictionHint, selectedSuspect)}</p>
+                </div>
+
+                {/* Suspect Clue Vault & Memory Reference Box */}
+                <div className="suspect-clue-vault">
+                  <div className="suspect-clue-vault__header">
+                    <div className="vault-title-wrap">
+                      <span className="vault-icon">📌</span>
+                      <div>
+                        <h4 className="vault-title">Clue Vault & Lead Reference Box</h4>
+                        <p className="vault-subtitle">
+                          Review saved clues for {selectedSuspect.name}. Click red keywords above or add your own notes to build your case.
+                        </p>
+                      </div>
+                    </div>
+                    <span className="vault-count-badge">
+                      {(pinnedKeywords[selectedSuspect.id] || []).length} Pinned Leads
+                    </span>
+                  </div>
+
+                  <div className="suspect-clue-vault__tags">
+                    {(pinnedKeywords[selectedSuspect.id] || []).length === 0 ? (
+                      <div className="vault-empty-state">
+                        <span className="vault-empty-icon">📁</span>
+                        <span className="vault-empty-text">
+                          No clues pinned yet. Read {selectedSuspect.name}'s statements above and click any <strong>red keyword</strong> to pin it here for review!
+                        </span>
+                      </div>
+                    ) : (
+                      (pinnedKeywords[selectedSuspect.id] || []).map((clue) => (
+                        <div key={clue} className="pinned-clue-pill">
+                          <span className="pinned-clue-pin">📎</span>
+                          <span className="pinned-clue-label">{clue}</span>
+                          <button
+                            type="button"
+                            className="pinned-clue-delete"
+                            onClick={() => handleToggleKeyword(selectedSuspect.id, clue)}
+                            title="Unpin clue"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ))
+                    )}
+                  </div>
+
+                  <form className="vault-custom-form" onSubmit={handleAddCustomClue}>
+                    <input
+                      type="text"
+                      placeholder={`Add personal deduction or note for ${selectedSuspect.name}...`}
+                      value={customClueInput}
+                      onChange={(e) => setCustomClueInput(e.target.value)}
+                      className="vault-custom-input"
+                    />
+                    <button type="submit" className="vault-custom-btn" disabled={!customClueInput.trim()}>
+                      + Pin Note
+                    </button>
+                  </form>
+                </div>
+              </div>
+            )}
+          </section>
+        )}
+
+        {/* Tab 3: Evidence */}
+        {activeTab === "evidence" && (
+          <section className="workbench-panel evidence-split">
+            <div className="evidence-roster">
+              <h3 className="panel-subheading">Tagged Evidence Lockers</h3>
+              <div className="evidence-items-list">
+                {caseData.evidence.map((ev) => (
+                  <button
+                    key={ev.id}
+                    className={`evidence-item-btn ${selectedEvidence?.id === ev.id ? "is-selected" : ""}`}
+                    onClick={() => setSelectedEvidence(ev)}
+                  >
+                    <span className="evidence-item-tag">{ev.category}</span>
+                    <span className="evidence-item-title">{ev.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {selectedEvidence && (
+              <div className="evidence-detail-view">
+                <div className="evidence-detail-header">
+                  <span className="evidence-badge">{selectedEvidence.category}</span>
+                  <h2 className="evidence-detail-title">{selectedEvidence.label}</h2>
+                </div>
+
+                <div className="evidence-card-body">
+                  <h4 className="evidence-field-title">Official Forensic Findings</h4>
+                  <p className="evidence-field-desc">{selectedEvidence.detail}</p>
+
+                  <h4 className="evidence-field-title">Crime Lab Annotation</h4>
+                  <p className="evidence-field-notes">{selectedEvidence.notes}</p>
+                </div>
+              </div>
+            )}
+          </section>
+        )}
+
+        {/* Tab 4: Chronology */}
+        {activeTab === "timeline" && (
+          <section className="workbench-panel">
+            <div className="timeline-container">
+              <h3 className="panel-subheading">Incident Night Sequence of Events</h3>
+              <div className="timeline-track">
+                {caseData.timeline.map((entry, idx) => (
+                  <div key={idx} className="timeline-row">
+                    <div className="timeline-badge-col">
+                      <span className="timeline-timestamp">{entry.time}</span>
+                    </div>
+                    <div className="timeline-dot" />
+                    <div className="timeline-event-content">
+                      <p>{entry.event}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+      </main>
+
+      {/* Floating Draggable AI Detective Assistant */}
+      <DetectiveChatbot caseData={caseData} />
+
+      {/* Accusation Modal */}
+      {showAccusationModal && (
+        <div className="modal-backdrop" onClick={() => setShowAccusationModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3 className="modal-title">Official Indictment Chamber</h3>
+              <button
+                className="modal-close-btn"
+                onClick={() => setShowAccusationModal(false)}
+              >
+                ✕
+              </button>
+            </div>
+
+            {!verdictResult ? (
+              <form onSubmit={handleAccusationSubmit} className="accusation-form">
+                <p className="accusation-warning">
+                  You have one official accusation. The AI prosecutor and evidentiary model will judge your deduction based on motive, forensic matches, and alibi invalidation.
+                </p>
+
+                <div className="form-group">
+                  <label htmlFor="suspect-select" className="form-label">
+                    Name the Culprit:
+                  </label>
+                  <select
+                    id="suspect-select"
+                    className="form-select"
+                    value={accusedId}
+                    onChange={(e) => setAccusedId(e.target.value)}
+                    required
+                  >
+                    <option value="">-- Choose Suspect to Indict --</option>
+                    {caseData.suspects.map((s) => (
+                      <option key={s.id} value={s.id}>
+                        {s.name} ({s.role})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="deduction-reasoning" className="form-label">
+                    State Your Evidentiary Proof (Key Alibi Breach & Clue Match):
+                  </label>
+                  <textarea
+                    id="deduction-reasoning"
+                    className="form-textarea"
+                    rows={4}
+                    placeholder="E.g., The 45-minute unaccounted window, access to belladonna, and initials left in the hearth..."
+                    value={deductionNotes}
+                    onChange={(e) => setDeductionNotes(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="modal-actions">
+                  <button
+                    type="button"
+                    className="btn-cancel"
+                    onClick={() => setShowAccusationModal(false)}
+                  >
+                    Hold for More Evidence
+                  </button>
+                  <button type="submit" className="btn-confirm-accuse">
+                    Deliver Accusation Now
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <div className="verdict-display">
+                <div
+                  className={`verdict-stamp ${
+                    verdictResult.success ? "verdict-stamp--guilty" : "verdict-stamp--failed"
+                  }`}
+                >
+                  {verdictResult.success ? "CASE CLOSED — CULPRIT BROUGHT TO JUSTICE" : "ACCUSATION OVERRULED — WRONG SUSPECT"}
+                </div>
+
+                <p className="verdict-summary">
+                  {verdictResult.success ? (
+                    <>
+                      Brilliant deduction, Detective! You successfully identified <strong>{verdictResult.killerName}</strong> as the murderer.
+                    </>
+                  ) : (
+                    <>
+                      Your accusation collapsed under cross-examination. The actual culprit was <strong>{verdictResult.killerName}</strong>.
+                    </>
+                  )}
+                </p>
+
+                <div className="verdict-truth-box">
+                  <h4>The Full Case Truth</h4>
+                  <p>{verdictResult.explanation}</p>
+                </div>
+
+                <div className="modal-actions">
+                  <button
+                    className="btn-confirm-accuse"
+                    onClick={() => {
+                      setVerdictResult(null);
+                      setShowAccusationModal(false);
+                    }}
+                  >
+                    Review Case File
+                  </button>
+                  <Link to="/" className="btn-cancel">
+                    Return to Home
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

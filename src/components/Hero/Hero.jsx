@@ -1,5 +1,6 @@
-import "./hero.css";
-import heroImage from "../../assets/Death note.jpg"; // swap to your actual file
+import { Link } from "react-router-dom";
+import "./Hero.css";
+import heroImage from "../../assets/death-note.jpg";
 
 export default function Hero() {
   return (
@@ -19,9 +20,11 @@ export default function Hero() {
           Open the file. Question every suspect. One accusation — no
           second chances.
         </p>
-        <a href="#start" className="hero__cta">
-          Start a Case
-        </a>
+        <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
+          <Link to="/cases" className="hero__cta">
+            Start Case →
+          </Link>
+        </div>
       </div>
     </section>
   );
