@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import "./SimulatorIntro.css";
 
 const capabilities = [
@@ -22,7 +23,13 @@ export default function SimulatorIntro() {
   return (
     <section id="about" className="intro">
       <div className="intro__inner">
-        <div className="intro__copy">
+        <motion.div
+          className="intro__copy"
+          initial={{ opacity: 0, y: 35 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
           <span className="intro__eyebrow">The Engine</span>
           <h2 className="intro__heading">
             Hand-written mysteries, with an AI detective's assistant on the case.
@@ -34,15 +41,23 @@ export default function SimulatorIntro() {
             your questions about the evidence, and helps you keep every thread
             straight as the case gets more tangled.
           </p>
-        </div>
+        </motion.div>
 
         <div className="intro__board">
-          {capabilities.map((item) => (
-            <article className="intro__card" key={item.tag}>
+          {capabilities.map((item, idx) => (
+            <motion.article
+              className="intro__card"
+              key={item.tag}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.5, delay: idx * 0.15, ease: "easeOut" }}
+              whileHover={{ y: -6, transition: { duration: 0.2 } }}
+            >
               <span className="intro__tag">{item.tag}</span>
               <h3 className="intro__card-title">{item.title}</h3>
               <p className="intro__card-body">{item.body}</p>
-            </article>
+            </motion.article>
           ))}
         </div>
       </div>

@@ -1,0 +1,336 @@
+/* Suspect Thought & Speech Interrogation Bubble CSS */
+.suspect-interrogation-bubble-container {
+  margin-top: 14px;
+  position: relative;
+  width: 100%;
+}
+
+.interrogation-bubble-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Comic / Dossier Bubble Pointer Tail */
+.bubble-pointer-tail {
+  position: absolute;
+  top: 24px;
+  left: -10px;
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 10px solid rgba(24, 25, 38, 0.95);
+  z-index: 3;
+}
+
+@media (max-width: 860px) {
+  .bubble-pointer-tail {
+    top: -10px;
+    left: 36px;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 10px solid rgba(24, 25, 38, 0.95);
+    border-top: none;
+  }
+}
+
+.bubble-card {
+  background: linear-gradient(135deg, rgba(20, 21, 32, 0.95), rgba(14, 15, 24, 0.98));
+  border: 1px solid rgba(201, 154, 70, 0.35);
+  border-radius: 10px;
+  padding: 16px 18px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.bubble-card.is-mood-nervous {
+  border-color: rgba(239, 68, 68, 0.5);
+  box-shadow: 0 8px 26px rgba(239, 68, 68, 0.15);
+}
+
+.bubble-card.is-mood-defensive {
+  border-color: rgba(245, 158, 11, 0.45);
+  box-shadow: 0 8px 26px rgba(245, 158, 11, 0.12);
+}
+
+.bubble-card.is-mood-confident {
+  border-color: rgba(16, 185, 129, 0.4);
+  box-shadow: 0 8px 26px rgba(16, 185, 129, 0.1);
+}
+
+.bubble-card.is-mood-thoughtful {
+  border-color: rgba(99, 102, 241, 0.4);
+  box-shadow: 0 8px 26px rgba(99, 102, 241, 0.1);
+}
+
+/* Header & Tabs */
+.bubble-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 10px;
+}
+
+.bubble-mode-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 3px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.bubble-mode-btn {
+  background: transparent;
+  border: none;
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(241, 238, 230, 0.65);
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.bubble-mode-btn:hover {
+  color: #f1eee6;
+}
+
+.bubble-mode-btn.is-active {
+  background: rgba(255, 255, 255, 0.12);
+  color: #f1eee6;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.bubble-mode-btn--thought.is-active {
+  background: rgba(147, 51, 234, 0.22);
+  color: #c084fc;
+  border: 1px solid rgba(147, 51, 234, 0.35);
+}
+
+.suspect-mood-badge {
+  font-family: "Inter", monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 2px 8px;
+  border-radius: 3px;
+  border: 1px solid transparent;
+}
+
+.suspect-mood-badge.is-mood-nervous {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.suspect-mood-badge.is-mood-defensive {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.suspect-mood-badge.is-mood-confident {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.suspect-mood-badge.is-mood-thoughtful {
+  background: rgba(99, 102, 241, 0.15);
+  color: #a5b4fc;
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+/* Bubble Body Text */
+.bubble-body {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+}
+
+.bubble-text-box {
+  width: 100%;
+}
+
+.bubble-speech-quote {
+  font-family: "Fraunces", Georgia, serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #f1eee6;
+  font-style: italic;
+  margin: 0;
+}
+
+.bubble-text-box--thought {
+  background: rgba(147, 51, 234, 0.08);
+  border-left: 3px solid #a855f7;
+  padding: 8px 12px;
+  border-radius: 0 6px 6px 0;
+}
+
+.thought-tag {
+  display: block;
+  font-family: "Inter", sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #c084fc;
+  margin-bottom: 4px;
+}
+
+.bubble-thought-text {
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(241, 238, 230, 0.88);
+  margin: 0;
+}
+
+/* Thinking animation */
+.bubble-thinking-state {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 0;
+}
+
+.thinking-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #c99a46;
+  animation: thinkingDotBounce 1.2s infinite ease-in-out;
+}
+
+.thinking-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.thinking-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes thinkingDotBounce {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40% { transform: scale(1.2); opacity: 1; }
+}
+
+.thinking-text {
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  font-style: italic;
+  color: rgba(241, 238, 230, 0.5);
+  margin-left: 6px;
+}
+
+/* Prompt section */
+.bubble-prompt-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 10px;
+}
+
+.prompt-section-lbl {
+  font-family: "Inter", sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgba(241, 238, 230, 0.45);
+}
+
+.bubble-quick-prompts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.prompt-chip {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 5px 9px;
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  color: #f1eee6;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.prompt-chip:hover:not(:disabled) {
+  background: rgba(201, 154, 70, 0.15);
+  border-color: rgba(201, 154, 70, 0.4);
+  color: #e5b358;
+}
+
+.prompt-chip:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Custom Query Form */
+.bubble-custom-query-form {
+  display: flex;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.bubble-query-input {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  color: #f1eee6;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.bubble-query-input:focus {
+  border-color: #c99a46;
+}
+
+.bubble-query-input::placeholder {
+  color: rgba(241, 238, 230, 0.35);
+}
+
+.bubble-query-submit-btn {
+  background: #c99a46;
+  color: #0b0b10;
+  border: none;
+  border-radius: 4px;
+  padding: 0 12px;
+  font-family: "Inter", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  white-space: nowrap;
+}
+
+.bubble-query-submit-btn:hover:not(:disabled) {
+  background: #e5b358;
+}
+
+.bubble-query-submit-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

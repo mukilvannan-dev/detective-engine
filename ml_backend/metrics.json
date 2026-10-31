@@ -1,0 +1,230 @@
+{
+  "champion_model": "Logistic Regression",
+  "dataset_size": 3200,
+  "train_size": 2560,
+  "test_size": 640,
+  "features": {
+    "numerical": [
+      "alibi_gap_minutes",
+      "forensic_trace_score",
+      "weapon_accessibility",
+      "contradiction_level",
+      "prior_criminal_record",
+      "nervousness_biomarker"
+    ],
+    "categorical": [
+      "relationship_to_victim",
+      "motive_severity",
+      "access_to_crime_scene"
+    ]
+  },
+  "models": {
+    "Logistic Regression": {
+      "accuracy": 0.9969,
+      "precision": 0.9938,
+      "recall": 0.9938,
+      "f1_score": 0.9938,
+      "roc_auc": 0.9999,
+      "confusion_matrix": [
+        [
+          479,
+          1
+        ],
+        [
+          1,
+          159
+        ]
+      ]
+    },
+    "Decision Tree": {
+      "accuracy": 0.9781,
+      "precision": 0.9563,
+      "recall": 0.9563,
+      "f1_score": 0.9563,
+      "roc_auc": 0.9773,
+      "confusion_matrix": [
+        [
+          473,
+          7
+        ],
+        [
+          7,
+          153
+        ]
+      ]
+    },
+    "Random Forest": {
+      "accuracy": 0.9953,
+      "precision": 0.9876,
+      "recall": 0.9938,
+      "f1_score": 0.9907,
+      "roc_auc": 0.9998,
+      "confusion_matrix": [
+        [
+          478,
+          2
+        ],
+        [
+          1,
+          159
+        ]
+      ]
+    },
+    "Gradient Boosting": {
+      "accuracy": 0.9828,
+      "precision": 0.9627,
+      "recall": 0.9688,
+      "f1_score": 0.9657,
+      "roc_auc": 0.9992,
+      "confusion_matrix": [
+        [
+          474,
+          6
+        ],
+        [
+          5,
+          155
+        ]
+      ]
+    }
+  },
+  "champion_metrics": {
+    "accuracy": 0.9969,
+    "precision": 0.9938,
+    "recall": 0.9938,
+    "f1_score": 0.9938,
+    "roc_auc": 0.9999,
+    "confusion_matrix": [
+      [
+        479,
+        1
+      ],
+      [
+        1,
+        159
+      ]
+    ]
+  },
+  "classification_report": {
+    "0": {
+      "precision": 0.9979166666666667,
+      "recall": 0.9979166666666667,
+      "f1-score": 0.9979166666666667,
+      "support": 480.0
+    },
+    "1": {
+      "precision": 0.99375,
+      "recall": 0.99375,
+      "f1-score": 0.99375,
+      "support": 160.0
+    },
+    "accuracy": 0.996875,
+    "macro avg": {
+      "precision": 0.9958333333333333,
+      "recall": 0.9958333333333333,
+      "f1-score": 0.9958333333333333,
+      "support": 640.0
+    },
+    "weighted avg": {
+      "precision": 0.996875,
+      "recall": 0.996875,
+      "f1-score": 0.996875,
+      "support": 640.0
+    }
+  },
+  "feature_importances": [
+    {
+      "feature": "forensic_trace_score",
+      "importance": 0.2223
+    },
+    {
+      "feature": "nervousness_biomarker",
+      "importance": 0.0978
+    },
+    {
+      "feature": "contradiction_level",
+      "importance": 0.0799
+    },
+    {
+      "feature": "weapon_accessibility",
+      "importance": 0.0729
+    },
+    {
+      "feature": "access_to_crime_scene_exclusive_access",
+      "importance": 0.067
+    },
+    {
+      "feature": "motive_severity_critical",
+      "importance": 0.0626
+    },
+    {
+      "feature": "motive_severity_none",
+      "importance": 0.0567
+    },
+    {
+      "feature": "access_to_crime_scene_public_area",
+      "importance": 0.0566
+    },
+    {
+      "feature": "alibi_gap_minutes",
+      "importance": 0.0563
+    },
+    {
+      "feature": "access_to_crime_scene_none",
+      "importance": 0.041
+    }
+  ],
+  "shap_summary": [
+    {
+      "feature": "forensic_trace_score",
+      "mean_abs_shap": 2.9819,
+      "rank": 1
+    },
+    {
+      "feature": "nervousness_biomarker",
+      "mean_abs_shap": 1.3616,
+      "rank": 2
+    },
+    {
+      "feature": "weapon_accessibility",
+      "mean_abs_shap": 1.2239,
+      "rank": 3
+    },
+    {
+      "feature": "contradiction_level",
+      "mean_abs_shap": 1.0864,
+      "rank": 4
+    },
+    {
+      "feature": "alibi_gap_minutes",
+      "mean_abs_shap": 0.7787,
+      "rank": 5
+    },
+    {
+      "feature": "access_to_crime_scene_public_area",
+      "mean_abs_shap": 0.4171,
+      "rank": 6
+    },
+    {
+      "feature": "motive_severity_none",
+      "mean_abs_shap": 0.3693,
+      "rank": 7
+    },
+    {
+      "feature": "prior_criminal_record",
+      "mean_abs_shap": 0.3196,
+      "rank": 8
+    },
+    {
+      "feature": "access_to_crime_scene_exclusive_access",
+      "mean_abs_shap": 0.2973,
+      "rank": 9
+    },
+    {
+      "feature": "access_to_crime_scene_none",
+      "mean_abs_shap": 0.259,
+      "rank": 10
+    }
+  ],
+  "shap_base_value": -4.6341
+}

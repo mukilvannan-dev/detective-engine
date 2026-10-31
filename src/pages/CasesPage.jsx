@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import { Header, Footer } from "../components";
 import { cases } from "../data/cases";
 import "./CasesPage.css";
@@ -25,14 +26,19 @@ export default function CasesPage() {
       <main className="cases-main">
         {/* Archive Banner Header */}
         <section className="cases-header">
-          <div className="cases-header__inner">
+          <motion.div
+            className="cases-header__inner"
+            initial={{ opacity: 0, y: -16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
             <span className="cases-header__eyebrow">Central Archives // Classified Files</span>
             <h1 className="cases-header__heading">Active Investigation Dossiers</h1>
             <p className="cases-header__sub">
               Select an open case file below. Review crime scene reports, examine forensic logs,
               and step into the interactive investigation room with your AI partner.
             </p>
-          </div>
+          </motion.div>
         </section>
 
         {/* Cases Grid / Selector */}
@@ -40,13 +46,19 @@ export default function CasesPage() {
           <div className="cases-content__inner">
             {/* Case Selection Cards Bar */}
             <div className="cases-list">
-              {cases.map((c) => {
+              {cases.map((c, idx) => {
                 const isCurrent = c.id === activeCase.id;
                 return (
-                  <div
+                  <motion.div
                     key={c.id}
                     className={`case-summary-card ${isCurrent ? "is-selected" : ""}`}
                     onClick={() => handleSelectCase(c.id)}
+                    initial={{ opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-30px" }}
+                    transition={{ duration: 0.45, delay: idx * 0.08 }}
+                    whileHover={{ y: -4, borderColor: "#c99a46" }}
+                    whileTap={{ scale: 0.98 }}
                   >
                     <div className="case-summary-card__top">
                       <span className="case-summary-card__number">{c.fileNumber}</span>
@@ -81,19 +93,28 @@ export default function CasesPage() {
                         Enter Case Room →
                       </button>
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>
 
-            {/* Active Case Dossier Viewer */}
+            {/* Active Case Dossier Viewer with AnimatePresence */}
             <div className="case-dossier-viewer">
-              <div className="case-card">
-                <div className="case-card__banner">
-                  <div className="case-card__badge-row">
-                    <span className="case-badge case-badge--primary">{activeCase.fileNumber}</span>
-                    <span className="case-badge case-badge--status">{activeCase.status}</span>
-                  </div>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeCase.id}
+                  className="case-card"
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -14 }}
+                  transition={{ duration: 0.35 }}
+                >
+                  <div className="case-card__banner">
+                    <div className="case-card__badge-row">
+                      <span className="case-badge case-badge--primary">{activeCase.fileNumber}</span>
+                      <span className="case-badge case-badge--status">{activeCase.status}</span>
+                    </div>
+
                   <div className="case-card__meta">
                     <span>Difficulty: <strong>{activeCase.difficulty}</strong></span>
                     <span>•</span>
@@ -249,10 +270,11 @@ export default function CasesPage() {
                     </button>
                   </div>
                 </div>
-              </div>
-            </div>
+              </motion.div>
+            </AnimatePresence>
           </div>
-        </section>
+        </div>
+      </section>
       </main>
 
       <Footer />

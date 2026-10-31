@@ -1,58 +1,76 @@
+import { motion } from "framer-motion";
 import "./HowWePlay.css";
 
 const steps = [
   {
     number: "01",
-    title: "Pick a case",
-    body: "Browse the case files and open one. Each case comes with its own crime, its own suspects, and its own scene.",
+    title: "Select an Active Case Dossier",
+    body: "Browse cold case archives ranging from the Blackwood Manor poisoning to the CryoGen Labs sabotage. Each case comes with authentic crime scene evidence photos, coroner autopsy findings, and full suspect profiles.",
   },
   {
     number: "02",
-    title: "Walk the scene",
-    body: "See where it happened and who's involved — the suspect list, their alibis, and the layout of the crime scene itself.",
+    title: "Interrogate with AI Detective Partner",
+    body: "Launch your draggable AI partner anywhere in the case room. Ask pointed questions about evidence, challenge suspicious timeline windows, and probe contradictions in suspect statements in real time.",
   },
   {
     number: "03",
-    title: "Collect evidence",
-    body: "Search the scene and each suspect for clues — objects, statements, inconsistencies. Everything you find gets added to your case file.",
+    title: "Pin Leads to Your Clue Vault",
+    body: "Review suspect alibis and interrogation reports. Click any highlighted red keyword or log personal deductions to pin critical leads into each suspect's dedicated Clue Vault.",
   },
   {
     number: "04",
-    title: "Consult the assistant",
-    body: "Open the AI assistant from anywhere in the case. Ask it about a suspect, a piece of evidence, or a timeline you're unsure of — it'll help you think it through without solving it for you.",
+    title: "Trained Machine Learning Analysis",
+    body: "Behind the scenes, a Scikit-learn binary classification pipeline calculates multi-factor guilt probabilities using unverified alibi gaps, physical forensic trace scores, contradiction indexes, and motive severity — protected with spoiler shields.",
   },
   {
     number: "05",
-    title: "Make your accusation",
-    body: "When you're confident, name the suspect you believe is guilty. This is your one and only guess for the case.",
+    title: "Deliver the Official Indictment",
+    body: "When you have deduced the truth, enter the Indictment Chamber. Select your prime suspect and enter your evidentiary proof detailing the alibi breach and forensic match to seal your deduction.",
   },
   {
     number: "06",
-    title: "Get your verdict",
-    body: "Our model — trained on the evidence patterns across every case — weighs everything you uncovered and delivers its own read on who did it, alongside whether your accusation was right.",
+    title: "Benchmark Against AI Model & Viva Mode",
+    body: "Review the verdict comparing your accusation against the AI champion model (99.69% accuracy) and ground truth. Unlock the Academic ML Viva Diagnostics to inspect the Confusion Matrix, ROC-AUC curve, and feature weights.",
   },
 ];
 
 export default function HowWePlay() {
   return (
-    <section id="how-we-play" className="how">
+    <section id="how-it-works" className="how">
       <div className="how__inner">
-        <div className="how__header">
-          <span className="how__eyebrow">The Process</span>
-          <h2 className="how__heading">How We Play</h2>
-        </div>
+        <motion.div
+          className="how__header"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.55, ease: "easeOut" }}
+        >
+          <span className="how__eyebrow">The Investigation Workflow</span>
+          <h2 className="how__heading">How It Works</h2>
+        </motion.div>
 
         <ol className="how__timeline">
-          {steps.map((step) => (
-            <li className="how__step" key={step.number}>
-              <div className="how__marker">
+          {steps.map((step, idx) => (
+            <motion.li
+              className="how__step"
+              key={step.number}
+              initial={{ opacity: 0, x: -35 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: "-40px" }}
+              transition={{ duration: 0.5, delay: idx * 0.1, ease: "easeOut" }}
+            >
+              <motion.div
+                className="how__marker"
+                whileHover={{ scale: 1.15, rotate: 5 }}
+                transition={{ type: "spring", stiffness: 400 }}
+              >
                 <span className="how__number">{step.number}</span>
-              </div>
+              </motion.div>
               <div className="how__content">
                 <h3 className="how__step-title">{step.title}</h3>
                 <p className="how__step-body">{step.body}</p>
               </div>
-            </li>
+            </motion.li>
           ))}
         </ol>
       </div>

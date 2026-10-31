@@ -20,7 +20,7 @@ export default function Footer() {
             <span className="footer__col-title">Navigation</span>
             <Link to="/">Home</Link>
             <a href="/#about">The Engine</a>
-            <a href="/#how-we-play">How We Play</a>
+            <a href="/#how-it-works">How It Works</a>
             <Link to="/cases">Case Dossiers</Link>
           </div>
           <div className="footer__col">

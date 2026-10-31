@@ -22,8 +22,8 @@ export default function Header() {
           <a href="/#about" className="header__link" onClick={() => setMenuOpen(false)}>
             The Engine
           </a>
-          <a href="/#how-we-play" className="header__link" onClick={() => setMenuOpen(false)}>
-            How We Play
+          <a href="/#how-it-works" className="header__link" onClick={() => setMenuOpen(false)}>
+            How It Works
           </a>
           <Link to="/cases" className="header__link" onClick={() => setMenuOpen(false)}>
             Cases
